@@ -6,7 +6,7 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
-function createWindow () {
+function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({width: 800, height: 600})
 
@@ -25,6 +25,13 @@ function createWindow () {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         win = null
+    })
+
+    win.on('resize', (e) => {
+        console.log('resize')
+        let [width, height] = win.getContentSize()
+        console.log(width,height)
+
     })
 }
 

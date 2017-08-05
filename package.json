@@ -2,7 +2,7 @@
   "name": "natsuyozora",
   "version": "1.0.0",
   "description": "try to make a game with electron and pixi",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
