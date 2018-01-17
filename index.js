@@ -13,6 +13,7 @@ function createWindow() {
     // and load the index.html of the app.
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
         slashes: true
     }))
 
@@ -31,7 +32,6 @@ function createWindow() {
         console.log('resize')
         let [width, height] = win.getContentSize()
         console.log(width,height)
-
     })
 }
 

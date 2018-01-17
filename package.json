@@ -3,14 +3,22 @@
   "version": "1.0.0",
   "description": "try to make a game with electron and pixi",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
-  },
-  "author": "RedMoon",
-  "license": "ISC",
   "dependencies": {
-    "electron": "^1.6.11",
-    "pixi.js": "^4.5.3"
-  }
+    "electron": "^1.7.10",
+    "pixi.js": "^4.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hling51325/natsuyozora.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hling51325/natsuyozora/issues"
+  },
+  "homepage": "https://github.com/hling51325/natsuyozora#readme"
 }

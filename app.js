@@ -30,7 +30,7 @@ PIXI.loader
     .add('./src/asset/circle1.png')
     .add("./src/asset/09.png")
     .load(setup);
-var stage = new PIXI.Container();
+let stage = new PIXI.Container();
 
 let cat
 let state
@@ -42,46 +42,17 @@ let bomb = new PIXI.Sprite(
 let bombs = []
 
 function setup() {
-    //Create the `cat` sprite from the texture
     cat = new PIXI.Sprite(
         PIXI.loader.resources['./src/asset/cat.png'].texture
     );
 
     setInterval(() => addBomb(), 500)
-    //Create the `tileset` sprite from the texture
-    // var texture = TextureCache["./src/asset/09.png"];
-    // var rectangle = new Rectangle(0, 0, 32, 32);
-    //
-    // texture.frame = rectangle;
-    //
-    // //Create the sprite from the texture
-    // var rocket = new Sprite(texture);
-    //
-    // //Position the rocket sprite on the canvas
-    // rocket.x = 32;
-    // rocket.y = 32;
-    //
-    // //Add the rocket to the stage
-    // stage.addChild(rocket);
 
     cat.position.set(96)
 
     cat.scale.set(0.5);
-    // cat.rotation = 0.5;
-    // cat.anchor.set(0.5, 0.5)
-    //Add the cat to the stage
     cat.vx = 0;
     cat.vy = 0;
-
-
-    // box = new Graphics();
-    // box.lineStyle(4, 0xFF3300, 1);
-    // box.beginFill(0x66CCFF);
-    // box.drawRect(0, 0, 64, 64);
-    // box.endFill();
-    // box.x = 170;
-    // box.y = 170;
-    // stage.addChild(box);
 
     message = new Text(
         "Hello Pixi!",
@@ -127,7 +98,7 @@ function play() {
 }
 
 function bindKey() {
-    var left = keyboard(window, 37),
+    let left = keyboard(window, 37),
         up = keyboard(window, 38),
         right = keyboard(window, 39),
         down = keyboard(window, 40);
@@ -186,7 +157,6 @@ function bindKey() {
 
 function addBomb() {
 
-    console.log('add bomb')
     let bomb = new PIXI.Sprite(
         PIXI.loader.resources['./src/asset/circle1.png'].texture
     )
