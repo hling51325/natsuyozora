@@ -1,6 +1,6 @@
 
 module.exports = (window, keyCode) => {
-    var key = {};
+    let key = {};
     key.code = keyCode;
     key.isDown = false;
     key.isUp = true;
@@ -27,11 +27,7 @@ module.exports = (window, keyCode) => {
     };
 
     //Attach event listeners
-    window.addEventListener(
-        "keydown", key.downHandler.bind(key), false
-    );
-    window.addEventListener(
-        "keyup", key.upHandler.bind(key), false
-    );
+    window.addEventListener("keydown", key.downHandler.bind(key), false);
+    window.addEventListener("keyup", key.upHandler.bind(key), false);
     return key;
 }

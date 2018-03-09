@@ -16,6 +16,7 @@ const TextureCache = utils.TextureCache
 const keyboard = require('./src/util/keyboard')
 const Bump = require('./src/util/bump')
 const Charm = require('./src/util/charm')
+const contain = require('./src/util/contain')
 
 let bump = new Bump(PIXI)
 let charm = new Charm(PIXI)
@@ -26,144 +27,143 @@ const renderer = PIXI.autoDetectRenderer(512, 512);
 document.body.appendChild(renderer.view);
 
 PIXI.loader
-    .add('./src/asset/cat.png')
-    .add('./src/asset/circle1.png')
-    .add("./src/asset/09.png")
+    .add('cat', './src/asset/cat.png')
+    .add('bullet', './src/asset/circle1.png')
+    .add('block', "./src/asset/09.png")
     .load(setup);
 let stage = new PIXI.Container();
 
+let speed = 1
 let cat
-let state
-let message
-let box
-let bomb = new PIXI.Sprite(
-    PIXI.loader.resources['./src/asset/circle1.png'].texture
-)
-let bombs = []
+let bullets = []
 
-function setup() {
-    cat = new PIXI.Sprite(
-        PIXI.loader.resources['./src/asset/cat.png'].texture
-    );
+function setup(loader, resources) {
+    cat = new PIXI.Sprite(resources.cat.texture)
+    bullet = new PIXI.Sprite(resources.bullet.texture)
 
-    setInterval(() => addBomb(), 500)
-
+    cat.anchor.set(0.5, 0.5)
     cat.position.set(96)
-
     cat.scale.set(0.5);
     cat.vx = 0;
     cat.vy = 0;
-
-    message = new Text(
-        "Hello Pixi!",
-        {fontFamily: "Arial", fontSize: 32, fill: "white"}
-    );
-
-    message.position.set(54, 96);
-    stage.addChild(message);
+    cat.facing = 'up'
 
     stage.addChild(cat);
     bindKey()
 
-    state = play;
-
-    // contain(cat, {x: 28, y: 10, width: 192, height: 192});
-
-    //Render the stage
     gameLoop()
+
+    function bindKey() {
+        let left = keyboard(window, 37),
+            up = keyboard(window, 38),
+            right = keyboard(window, 39),
+            down = keyboard(window, 40);
+        let shoot = keyboard(window, 90)
+        move()
+        shoot.press = function () {
+            let bullet = new PIXI.Sprite(resources.bullet.texture)
+            bulletShoot(bullet, cat.facing)
+        }
+
+        function move() {
+            left.press = function () {
+                cat.vx = -speed;
+                cat.facing = 'left'
+                cat.rotation = arc(-90);
+            };
+            left.release = function () {
+                if (!right.isDown) {
+                    cat.vx = 0;
+                }
+            };
+            up.press = function () {
+                cat.vy = -speed;
+                cat.rotation = 0
+                cat.facing = 'up'
+
+            };
+            up.release = function () {
+                if (!down.isDown) {
+                    cat.vy = 0;
+                }
+            };
+            right.press = function () {
+                cat.vx = speed;
+                cat.rotation = arc(90);
+                cat.facing = 'right'
+
+            };
+            right.release = function () {
+                if (!left.isDown) {
+                    cat.vx = 0;
+                }
+            };
+            down.press = function () {
+                cat.vy = speed;
+                cat.rotation = arc(180);
+                cat.facing = 'down'
+
+            };
+            down.release = function () {
+                if (!up.isDown) {
+                    cat.vy = 0;
+                }
+            };
+        }
+
+        function arc(angle) {
+            return angle / 360 * 2 * Math.PI
+        }
+    }
 }
 
 function gameLoop() {
     requestAnimationFrame(gameLoop);
-
-    state();
-    charm.update();
-
+    play();
+    bullets.forEach(bullet => {
+        bullet.y += bullet.vy
+        bullet.x += bullet.vx;
+    })
     renderer.render(stage);
 }
 
 function play() {
-
-    cat.x += cat.vx;
-    cat.y += cat.vy
-
-    message.text = "No collision...";
-
-    bombs.forEach(bomb => {
-        if (bump.hitTestRectangle(cat, bomb)) {
-            message.text = "hit!";
-        }
-    })
-
+    let hem = contain(cat, {x: 28, y: 10, width: 488, height: 480})
+    if (!hem) {
+        cat.y += cat.vy
+        cat.x += cat.vx;
+    }
 }
 
-function bindKey() {
-    let left = keyboard(window, 37),
-        up = keyboard(window, 38),
-        right = keyboard(window, 39),
-        down = keyboard(window, 40);
+function bulletShoot(bullet, direction) {
+    bullet.position.set(cat.x, cat.y)
+    if (direction === 'left') {
+        bullet.vx = -5
+        bullet.vy = 0;
+    }
+    if (direction === 'right') {
+        bullet.vx = 5
+        bullet.vy = 0;
+    }
+    if (direction === 'up') {
+        bullet.vy = -5
+        bullet.vx = 0
+    }
+    if (direction === 'down') {
+        bullet.vy = 5
+        bullet.vx = 0
+    }
 
-    //Left arrow key `press` method
-    left.press = function () {
-        //Change the cat's velocity when the key is pressed
-        cat.vx = -5;
-        // cat.vy = 0;
-    };
-
-    //Left arrow key `release` method
-    left.release = function () {
-
-        //If the left arrow has been released, and the right arrow isn't down,
-        //and the cat isn't moving vertically:
-        //Stop the cat
-        if (!right.isDown) {
-            cat.vx = 0;
-        }
-    };
-
-    //Up
-    up.press = function () {
-        cat.vy = -5;
-        // cat.vx = 0;
-    };
-    up.release = function () {
-        if (!down.isDown) {
-            cat.vy = 0;
-        }
-    };
-
-    //Right
-    right.press = function () {
-        cat.vx = 5;
-        // cat.vy = 0;
-    };
-    right.release = function () {
-        if (!left.isDown) {
-            cat.vx = 0;
-        }
-    };
-
-    //Down
-    down.press = function () {
-        cat.vy = 5;
-        // cat.vx = 0;
-    };
-    down.release = function () {
-        if (!up.isDown) {
-            cat.vy = 0;
-        }
-    };
+    bullets.push(bullet)
+    stage.addChild(bullet);
 }
 
-function addBomb() {
-
-    let bomb = new PIXI.Sprite(
-        PIXI.loader.resources['./src/asset/circle1.png'].texture
-    )
-
-    bomb.position.set(Math.random() * 512, Math.random() * 512)
-
-    charm.slide(bomb, 256, 256, 120);
-    bombs.push(bomb)
-    stage.addChild(bomb);
-}
+// function addBomb() {
+//     let bomb = new PIXI.Sprite(
+//         PIXI.loader.resources['./src/asset/circle1.png'].texture
+//     )
+//     bomb.position.set(Math.random() * 512, Math.random() * 512)
+//     charm.slide(bomb, 256, 256, 120);
+//     bombs.push(bomb)
+//     stage.addChild(bomb);
+// }
