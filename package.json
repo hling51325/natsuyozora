@@ -4,11 +4,13 @@
   "description": "try to make a game with electron and pixi",
   "main": "index.js",
   "dependencies": {
-    "electron": "^1.7.10",
-    "pixi.js": "^4.6.0"
+    "pixi.js": "^5.0.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "electron": "^5.0.3"
+  },
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

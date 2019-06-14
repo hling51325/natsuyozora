@@ -3,7 +3,7 @@ const PIXI = require('pixi.js')
 const {
     Container,
     autoDetectRenderer,
-    loader,
+    Loader,
     resources,
     Sprite,
     Rectangle,
@@ -11,6 +11,34 @@ const {
     Text,
     utils
 } = PIXI
+
+const app = new PIXI.Application({
+});
+document.body.appendChild(app.view);
+
+const container = new PIXI.Container();
+
+app.stage.addChild(container);
+
+// Create a new texture
+const texture = PIXI.Texture.from('src/assets/cat.png');
+
+for (let i = 0; i < 25; i++) {
+    const bunny = new PIXI.Sprite(texture);
+    container.addChild(bunny);
+}
+
+container.x = app.screen.width / 2;
+container.y = app.screen.height / 2;
+
+container.pivot.x = container.width / 2;
+container.pivot.y = container.height / 2;
+
+app.ticker.add((delta) => {
+    container.rotation -= 0.01 * delta;
+});
+
+
 const TextureCache = utils.TextureCache
 
 const keyboard = require('./src/util/keyboard')
@@ -26,11 +54,11 @@ const renderer = PIXI.autoDetectRenderer(512, 512);
 //Add the canvas to the HTML document
 document.body.appendChild(renderer.view);
 
-PIXI.loader
-    .add('cat', './src/asset/cat.png')
-    .add('bullet', './src/asset/circle1.png')
-    .add('block', "./src/asset/09.png")
-    .load(setup);
+// Loader
+//     .add('cat', './src/asset/cat.png')
+//     .add('bullet', './src/asset/circle1.png')
+//     .add('block', "./src/asset/09.png")
+//     .load(setup);
 let stage = new PIXI.Container();
 
 let speed = 1
